@@ -1,0 +1,64 @@
+# Node.js dependency directories
+node_modules/
+npm-debug.log
+
+# Local development environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build directories
+dist/
+build/
+tmp/
+temp/
+
+# IDE and editor directories
+.vscode/
+.idea/
+.DS_Store
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+
+# Miscellaneous
+*.sublime-project
+*.sublime-workspace
+*.log
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Parcel-bundler cache (if you use it)
+.cache/
+
+# SASS cache (if you use SASS)
+.sass-cache/
+
+# Coverage directory used by testing frameworks
+coverage/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional Stylelint cache
+.stylelintcache
