@@ -16,7 +16,7 @@ const authenticateUserKey = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+        jwt.verify(token, publicKey, { algorithms: ['RS256'] })
         next()
     } catch (err) {
         res.status(400).send('Access denied. Invalid token.')
@@ -24,9 +24,7 @@ const authenticateUserKey = (req, res, next) => {
 }
 
 const generateUserKey = (username) => {
-    const token = jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '1h' })
-
-    return token
+    return jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '1h' })
 }
 
 
