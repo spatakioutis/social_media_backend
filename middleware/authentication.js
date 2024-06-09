@@ -1,32 +1,36 @@
-const db = require('../database')
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+require('dotenv').config();
 
-const checkUsernameExists = (req, res, next) => {
+const publicKeyPath = process.env.PUBLIC_KEY_PATH;
+const privateKeyPath = process.env.PRIVATE_KEY_PATH;
 
-    const {username} = req.body
+const publicKey = fs.readFileSync(publicKeyPath, 'utf8');
+const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
 
-    //check if username exists
-    const checkUsernameQuery = 'SELECT * FROM user_info WHERE username=?'
-    db.query(checkUsernameQuery, [username], (error, results, fields) => {
-        if (error) {
-            console.error('Error checking username: ' + error.message)
-            res.status(500).json({
-                message: 'Server error'
-            })
-            return
-        }
-        
-        //Check if username already exists
-        if (results.length > 0) {
-            res.status(400).json({
-                message: 'Username already exists'
-            })
-            return
-        }
-        else 
-            next()
-    })
+const authenticateUserKey = (req, res, next) => {
+
+    const token = req.header('Authorization')?.split(' ')[1] // Bearer <token>
+    if (!token) {
+        return res.status(401).send('Access denied. No token provided.')
+    }
+
+    try {
+        const decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
+        next()
+    } catch (err) {
+        res.status(400).send('Access denied. Invalid token.')
+    }
 }
 
+const generateUserKey = (username) => {
+    const token = jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '1h' })
+
+    return token
+}
+
+
 module.exports = {
-    checkUsernameExists
+    authenticateUserKey,
+    generateUserKey
 }
