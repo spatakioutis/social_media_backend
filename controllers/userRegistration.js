@@ -1,9 +1,8 @@
 const User = require('../models/User')
+const bcrypt = require('bcryptjs')
 
 const registerUser = async (req, res, next) => {
-    console.log(req.body)
     const {firstName, lastName, username, email, password} = req.body
-    console.log(firstName, lastName, username, email, password)
     // const birthdate = new Date(birthDate).toISOString().split('T')[0]
 
     try {
@@ -14,7 +13,13 @@ const registerUser = async (req, res, next) => {
         res.status(200).json({ message: 'Registration successful' })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        if (error.code == 11000) {
+            res.status(400).json({ error: 'Username already exists' })
+        }
+        else {
+            res.status(400).json({ error: error.message })
+        }
+        
     }
 
 }
@@ -30,16 +35,13 @@ const unregisterUser = async (req, res, next) => {
             return res.status(400).json({ message: 'Invalid password' })
         }
 
-        await user.remove()
+        await user.deleteOne()
 
         res.status(200).json({ message: 'User deleted succesfully' })
 
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
-
-
-
 }
 
 module.exports = {
