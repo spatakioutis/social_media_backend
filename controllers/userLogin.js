@@ -1,13 +1,20 @@
 const bcrypt = require('bcryptjs')
-const db = require('../database')
 const authentication = require('../middleware/authentication')
 
 const loginUser = (req, res) => {
     const {username, password} = req.body
 
     // check username exists 
-    console.log(username, password)
-    // check password 
+    // const user = await db.getUserByUsername(username);
+    // if (!user) {
+    //     return res.status(400).json({ message: 'Invalid credentials' });
+    // }
+
+    // // check password 
+    // const isMatch = await bcrypt.compare(password, user.password);
+    //     if (!isMatch) {
+    //         return res.status(400).json({ message: 'Invalid credentials' });
+    // }
 
     // generate connection JWT
     const token = authentication.generateUserKey(username)
