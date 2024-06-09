@@ -1,27 +1,28 @@
 const bcrypt = require('bcryptjs')
 const authentication = require('../middleware/authentication')
+const User = require('../models/User')
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
     const {username, password} = req.body
 
-    // check username exists 
-    // const user = await db.getUserByUsername(username);
-    // if (!user) {
-    //     return res.status(400).json({ message: 'Invalid credentials' });
-    // }
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ message: 'Username does not exist' })
+        }
 
-    // // check password 
-    // const isMatch = await bcrypt.compare(password, user.password);
-    //     if (!isMatch) {
-    //         return res.status(400).json({ message: 'Invalid credentials' });
-    // }
+        const passwordMatch = await bcrypt.compare(password, user.password)
+        if (!passwordMatch) {
+            return res.status(400).json({ message: 'Invalid password' })
+        }
 
-    // generate connection JWT
-    const token = authentication.generateUserKey(username)
-    
-    res.status(200).json({
-        token: token
-    })
+        const token = authentication.generateUserKey(username)
+
+        res.status(200).json({ token })
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' })
+    }
 }
 
 

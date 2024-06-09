@@ -3,7 +3,7 @@ node_modules/
 npm-debug.log
 
 test.js
-
+data.json
 # Local development environment
 .env
 .env.local

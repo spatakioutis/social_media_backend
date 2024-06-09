@@ -16,9 +16,7 @@ app.use(bodyParser.json())
 app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 
-mongoose.connect(
-    process.env.MONGODB_URI
-)
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('Connected to database successfully'))
 .catch(err => console.error('Database connection error:', err))
 
