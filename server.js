@@ -17,8 +17,8 @@ app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 
 mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('Connected to database successfully'))
-.catch(err => console.error('Database connection error:', err))
+        .then(() => console.log('Connected to database successfully'))
+        .catch(err => console.error('Database connection error:', err))
 
 app.listen(5000, () => {
     console.log('Server listening on port 5000...')

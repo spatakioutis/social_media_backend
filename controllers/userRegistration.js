@@ -3,10 +3,11 @@ const bcrypt = require('bcryptjs')
 
 const registerUser = async (req, res, next) => {
     const {firstName, lastName, username, email, password} = req.body
-    // const birthdate = new Date(birthDate).toISOString().split('T')[0]
 
+    const birthDate = new Date(req.body.birthDate).toISOString().split('T')[0]
+    
     try {
-        const newUser = new User( {username, password, firstName, lastName, email} )
+        const newUser = new User({username, password, firstName, lastName, email, birthDate})
 
         await newUser.save()
 

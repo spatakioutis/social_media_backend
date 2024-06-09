@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
     password:  { type: String, required: true },
     firstName: { type: String, required: true },
     lastName:  { type: String, required: true },
-    email:     { type: String, required: true }
-    // birthDate: { type: Date,   required: false}  
+    email:     { type: String, required: true },
+    birthDate: { type: Date  , required: true}  
 });
 
 userSchema.pre('save', async function (next) {

@@ -5,6 +5,8 @@ const User = require('../models/User')
 const loginUser = async (req, res) => {
     const {username, password} = req.body
 
+    console.log("Received login data: ", username, password)
+
     try {
         const user = await User.findOne({ username })
         if (!user) {
