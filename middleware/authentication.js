@@ -20,7 +20,7 @@ const authenticateUserKey = (req, res, next) => {
         req.user = user
         next()
     } catch (err) {
-        res.status(400).send('Access denied. Invalid token.')
+        res.status(401).send('Access denied. Invalid token.')
     }
 }
 

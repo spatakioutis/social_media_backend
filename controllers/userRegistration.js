@@ -13,7 +13,7 @@ const registerUser = async (req, res) => {
 
         await newUser.save()
 
-        res.status(200).json({ message: 'Registration successful' })
+        res.status(201).json({ message: 'Registration successful' })
 
     } catch (error) {
         if (error.code == 11000) {
