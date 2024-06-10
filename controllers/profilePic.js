@@ -6,7 +6,7 @@ const addProfilePic = async (req, res) => {
     const username = req.user.username
 
     try {
-        const image_url = await uploadFileToGoogleCS(username, req.file)
+        const image_url = await uploadFileToGoogleCS(username, req.file, 'profPics')
         
         const user = await User.findOne({ username })
         user.profilePic = image_url
@@ -28,7 +28,7 @@ const deleteProfilePic = async (req, res) => {
 
         const filepath = user.profilePic.split('/')
 
-        await deleteFileFromGoogleCS(filepath[filepath.length - 1])
+        await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
         
         user.profilePic = ''
         await user.save()
