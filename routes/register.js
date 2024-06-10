@@ -4,10 +4,12 @@ const multer = require('multer')
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 
+const authentication = require('../middleware/authentication.js')
+
 const userRegistration = require('../controllers/userRegistration')
 const router = express.Router()
 
 router.post('/', upload.single('profilePic'), userRegistration.registerUser)
-router.delete('/', userRegistration.unregisterUser)
+router.delete('/', authentication.authenticateUserKey, userRegistration.unregisterUser)
 
 module.exports = router

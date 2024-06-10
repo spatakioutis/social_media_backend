@@ -12,7 +12,7 @@ const addProfilePic = async (req, res) => {
         user.profilePic = image_url
         await user.save()
 
-        res.status(200).json({message: 'Profile icture upload successful'})
+        res.status(200).json({message: 'Profile picture upload successful'})
     }
     catch (error) {
         res.status(400).json({error: error.message})
