@@ -1,13 +1,15 @@
 const User = require('../models/User')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 
-const registerUser = async (req, res, next) => {
+const registerUser = async (req, res) => {
     const {firstName, lastName, username, email, password} = req.body
+    
+    let profilePic = ''
 
     const birthDate = new Date(req.body.birthDate).toISOString().split('T')[0]
     
     try {
-        const newUser = new User({username, password, firstName, lastName, email, birthDate})
+        const newUser = new User({username, password, firstName, lastName, email, birthDate, profilePic})
 
         await newUser.save()
 
@@ -20,9 +22,7 @@ const registerUser = async (req, res, next) => {
         else {
             res.status(400).json({ error: error.message })
         }
-        
     }
-
 }
 
 const unregisterUser = async (req, res, next) => {

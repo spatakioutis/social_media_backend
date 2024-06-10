@@ -5,14 +5,12 @@ const User = require('../models/User')
 const loginUser = async (req, res) => {
     const {username, password} = req.body
 
-    console.log("Received login data: ", username, password)
-
     try {
         const user = await User.findOne({ username })
         if (!user) {
             return res.status(400).json({ message: 'Username does not exist' })
         }
-
+ 
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
             return res.status(400).json({ message: 'Invalid password' })

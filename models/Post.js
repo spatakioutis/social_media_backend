@@ -7,10 +7,11 @@ const postSchema = new mongoose.Schema({
     comments: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         text: { type: String, required: true },
-        createdAt: { type: Date, default: Date.now }
+        createdAt: { type: Date, default: Date.now },
+        default: []
     }],
     createdAt: { type: Date, default: Date.now }
-});
+})
 
 const Post = mongoose.model('Post', postSchema, 'posts')
 

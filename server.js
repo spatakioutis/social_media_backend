@@ -6,6 +6,7 @@ require('dotenv').config()
 
 const registerRoute = require('./routes/register')
 const loginRoute = require('./routes/login')
+const uploadRoute = require('./routes/upload')
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json())
 
 app.use('/register', registerRoute)
 app.use('/login', loginRoute)
+app.use('/upload', uploadRoute)
 
 mongoose.connect(process.env.MONGODB_URI)
         .then(() => console.log('Connected to database successfully'))
@@ -23,3 +25,4 @@ mongoose.connect(process.env.MONGODB_URI)
 app.listen(5000, () => {
     console.log('Server listening on port 5000...')
 })
+
