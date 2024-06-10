@@ -1,4 +1,4 @@
-const { uploadProfilePic } = require('../utils/imageHandle')
+const {uploadFileToGoogleCS, deleteFileFromGoogleCS } = require('../utils/imageHandle')
 const User = require('../models/User')
 
 const addProfilePic = async (req, res) => {
@@ -6,7 +6,7 @@ const addProfilePic = async (req, res) => {
     const username = req.user.username
 
     try {
-        const image_url = await uploadProfilePic(username, req.file)
+        const image_url = await uploadFileToGoogleCS(username, req.file)
         
         const user = await User.findOne({ username })
         user.profilePic = image_url
@@ -16,10 +16,31 @@ const addProfilePic = async (req, res) => {
     }
     catch (error) {
         res.status(400).json({error: error.message})
+    } 
+}
+
+const deleteProfilePic = async (req, res) => {
+
+    const username = req.user.username
+
+    try {
+        const user = await User.findOne({ username })
+
+        const filepath = user.profilePic.split('/')
+
+        await deleteFileFromGoogleCS(filepath[filepath.length - 1])
+        
+        user.profilePic = ''
+        await user.save()
+
+        res.status(200).json({message: 'Profile picture deleted successfully'})
     }
-    
+    catch (error) {
+        res.status(400).json({error: error.message})
+    } 
 }
 
 module.exports = {
-    addProfilePic
+    addProfilePic,
+    deleteProfilePic
 }
