@@ -1,5 +1,7 @@
 const User = require('../models/User')
+const Post = require('../models/Post')
 const bcrypt = require('bcryptjs');
+const { deleteFileFromGoogleCS } = require('../utils/imageHandle');
 
 const registerUser = async (req, res) => {
     const {firstName, lastName, username, email, password} = req.body
@@ -25,16 +27,28 @@ const registerUser = async (req, res) => {
     }
 }
 
-const unregisterUser = async (req, res, next) => {
+const unregisterUser = async (req, res) => {
     const {username, password} = req.body
 
     try {
         const user = await User.findOne({ username })
-
+        
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
             return res.status(400).json({ message: 'Invalid password' })
         }
+
+        const userPosts = await Post.find({user: user.username})
+
+        await Promise.all(userPosts.map(async (post) => {
+            try {
+                const imagePath = post.image.split('/')
+                await deleteFileFromGoogleCS(imagePath[imagePath.length - 1], 'postPics')
+                await post.deleteOne()
+            } catch (error) {
+                res.status(400).json({ error: error.message })
+            }
+        }))
 
         await user.deleteOne()
 
