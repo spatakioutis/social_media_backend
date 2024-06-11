@@ -7,6 +7,7 @@ require('dotenv').config()
 const registerRoute = require('./routes/register')
 const loginRoute = require('./routes/login')
 const profilePicRoute = require('./routes/profilePic')
+const postsRoute = require('./routes/posts')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 app.use('/profilePic', profilePicRoute)
+app.use('/posts', postsRoute)
 
 mongoose.connect(process.env.MONGODB_URI)
         .then(() => console.log('Connected to database successfully'))

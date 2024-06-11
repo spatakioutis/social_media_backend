@@ -29,9 +29,9 @@ const deleteFileFromGoogleCS = async (filename, dest) => {
         const folder = ( dest === 'profPics' ? profPicsFolder : postPicsFolder )
 
         await storage.bucket(bucketName).file(`${folder}${filename}`).delete();
-        console.log(`File ${filename} deleted successfully.`);
+        // console.log(`File ${filename} deleted successfully.`)
     } catch (error) {
-        console.error(`Failed to delete file: ${error.message}`);
+        // console.error(`Failed to delete file: ${error.message}`)
         throw new Error('Failed to delete file from GCS');
     }
 }

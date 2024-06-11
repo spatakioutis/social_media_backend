@@ -9,6 +9,7 @@ const addProfilePic = async (req, res) => {
         const image_url = await uploadFileToGoogleCS(username, req.file, 'profPics')
         
         const user = await User.findOne({ username })
+        console.log(user)
         user.profilePic = image_url
         await user.save()
 
