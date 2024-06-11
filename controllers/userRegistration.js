@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const registerUser = async (req, res) => {
     const {firstName, lastName, username, email, password} = req.body
     
-    let profilePic = ''
+    const profilePic = 'default_pic.png'
 
     const birthDate = new Date(req.body.birthDate).toISOString().split('T')[0]
     

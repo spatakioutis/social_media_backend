@@ -4,12 +4,10 @@ const Post = require('../models/Post')
 
 const addUserPost = async (req, res) => {
     // const {comments} = req.body
-    const userInfo = req.user
+    const username = req.user.username
     
     try {
-        const user = await User.findOne({ username: userInfo.username })
-        
-        const newPost = new Post({user: user._id, image: ''})
+        const newPost = new Post({user: username, image: ''})
 
         const image_url = await uploadFileToGoogleCS(newPost._id, req.file, 'postPics')
         
