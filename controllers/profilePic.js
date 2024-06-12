@@ -13,10 +13,14 @@ const addProfilePic = async (req, res) => {
         user.profilePic = image_url
         await user.save()
 
-        res.status(200).json({message: 'Profile picture upload successful'})
+        res.status(200).json({
+            message: 'Profile picture upload successful'
+        })
     }
     catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(400).json({
+            error: error.message
+        })
     } 
 }
 
@@ -31,13 +35,17 @@ const deleteProfilePic = async (req, res) => {
 
         await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
         
-        user.profilePic = ''
+        user.profilePic = 'default_pic.png'
         await user.save()
 
-        res.status(200).json({message: 'Profile picture deleted successfully'})
+        res.status(200).json({
+            message: 'Profile picture deleted successfully'
+        })
     }
     catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(400).json({
+            error: error.message}
+        )
     } 
 }
 

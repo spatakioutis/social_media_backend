@@ -35,7 +35,9 @@ const unregisterUser = async (req, res) => {
         
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
-            return res.status(400).json({ message: 'Invalid password' })
+            return res.status(400).json({
+                message: 'Invalid password'
+            })
         }
 
         const userPosts = await Post.find({user: user.username})
@@ -46,16 +48,22 @@ const unregisterUser = async (req, res) => {
                 await deleteFileFromGoogleCS(imagePath[imagePath.length - 1], 'postPics')
                 await post.deleteOne()
             } catch (error) {
-                res.status(400).json({ error: error.message })
+                res.status(400).json({
+                    error: error.message
+                })
             }
         }))
 
         await user.deleteOne()
 
-        res.status(200).json({ message: 'User deleted succesfully' })
+        res.status(200).json({
+            message: 'User deleted succesfully'
+        })
 
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(500).json({
+            error: error.message
+        })
     }
 }
 
