@@ -5,7 +5,7 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 const authentication = require('../middleware/authentication.js')
-const profilePic = require('../controllers/profilePic.js')
+const profilePic = require('../controllers/profilePicController.js')
 
 const router = express.Router()
 
