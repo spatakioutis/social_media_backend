@@ -71,7 +71,7 @@ const getPosts = async (req, res) => {
 
         res.status(200).json({
             message: 'Post fetching successful',
-            data: postsWithUserInfo
+            posts: postsWithUserInfo
         })
     }
     catch (error) {
