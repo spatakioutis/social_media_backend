@@ -25,7 +25,7 @@ const authenticateUserKey = (req, res, next) => {
 }
 
 const generateUserKey = (username) => {
-    return jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '1h' })
+    return jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '10s' })
 }
 
 module.exports = {

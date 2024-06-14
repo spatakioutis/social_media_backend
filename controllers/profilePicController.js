@@ -49,7 +49,26 @@ const deleteProfilePic = async (req, res) => {
     } 
 }
 
+const sendProfilePic = async (req, res) => {
+    const {username} = req.query
+
+    try {
+        const user = await User.findOne({ username })
+
+        res.status(200).json({
+            image: user.profilePic
+        })
+
+    }
+    catch (error) {
+        res.status(400).json({
+            error: error.message}
+        )
+    }
+}
+
 module.exports = {
     addProfilePic,
-    deleteProfilePic
+    deleteProfilePic,
+    sendProfilePic
 }

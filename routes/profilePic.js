@@ -5,12 +5,13 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 const authentication = require('../middleware/authentication.js')
-const profilePic = require('../controllers/profilePicController.js')
+const profilePicController = require('../controllers/profilePicController.js')
 
 const router = express.Router()
 
-router.post('/', authentication.authenticateUserKey , upload.single('profilePic'), profilePic.addProfilePic)
-router.put('/', authentication.authenticateUserKey , upload.single('profilePic'), profilePic.addProfilePic )
-router.delete('/', authentication.authenticateUserKey,  profilePic.deleteProfilePic)
+router.post('/', authentication.authenticateUserKey , upload.single('profilePic'), profilePicController.addProfilePic)
+router.put('/', authentication.authenticateUserKey , upload.single('profilePic'), profilePicController.addProfilePic )
+router.delete('/', authentication.authenticateUserKey,  profilePicController.deleteProfilePic)
+router.get('/', authentication.authenticateUserKey,  profilePicController.sendProfilePic)
 
 module.exports = router

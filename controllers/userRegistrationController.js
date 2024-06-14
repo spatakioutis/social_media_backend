@@ -6,7 +6,7 @@ const { deleteFileFromGoogleCS } = require('../utils/imageHandle');
 const registerUser = async (req, res) => {
     const {firstName, lastName, username, email, password} = req.body
     
-    const profilePic = 'default_pic.png'
+    const profilePic = 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png'
 
     const birthDate = new Date(req.body.birthDate).toISOString().split('T')[0]
     
