@@ -24,7 +24,15 @@ const loginUser = async (req, res) => {
 
         res.status(200).json({ 
             message: 'Login succesful',
-            token: token 
+            token: token,
+            user: {
+                username:   user.username,
+                firstName:  user.firstName,
+                lastName:   user.lastName,
+                email:      user.email,
+                birthDate:  user.birthDate,
+                profilePic: user.profilePic  
+            }
         })
 
     } catch (error) {
