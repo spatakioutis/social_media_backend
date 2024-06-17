@@ -1,5 +1,6 @@
 const { Storage } = require('@google-cloud/storage')
 const storage = new Storage()
+
 const bucketName = 'spatakioutis_app_img'
 const profPicsFolder = 'profilePics/'
 const postPicsFolder = 'postPics/'
@@ -17,10 +18,10 @@ const uploadFileToGoogleCS = async (filename, file, dest) => {
         blobStream.on('error', (err) => reject(err))
         blobStream.on('finish', () => {
             const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-            resolve(publicUrl);
+            resolve(publicUrl)
         })
 
-        blobStream.end(file.buffer);
+        blobStream.end(file.buffer)
     })
 }
 
@@ -28,11 +29,9 @@ const deleteFileFromGoogleCS = async (filename, dest) => {
     try {
         const folder = ( dest === 'profPics' ? profPicsFolder : postPicsFolder )
 
-        await storage.bucket(bucketName).file(`${folder}${filename}`).delete();
-        // console.log(`File ${filename} deleted successfully.`)
+        await storage.bucket(bucketName).file(`${folder}${filename}`).delete()
     } catch (error) {
-        // console.error(`Failed to delete file: ${error.message}`)
-        throw new Error('Failed to delete file from GCS');
+        throw new Error('Failed to delete file from GCS')
     }
 }
 

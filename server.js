@@ -8,6 +8,7 @@ const registerRoute = require('./routes/register')
 const loginRoute = require('./routes/login')
 const profilePicRoute = require('./routes/profilePic')
 const postsRoute = require('./routes/posts')
+const profileRoute = require('./routes/profiles')
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use('/register', registerRoute)
 app.use('/login', loginRoute)
 app.use('/profilePic', profilePicRoute)
 app.use('/posts', postsRoute)
+app.use('/profile', profileRoute)
 
 mongoose.connect(process.env.MONGODB_URI)
         .then(() => console.log('Connected to database successfully'))

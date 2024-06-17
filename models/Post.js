@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 const postSchema = new mongoose.Schema({
     user:      { type: String, required: true },
     image:     { type: String, required: true },
-    likes:     { type: Number, default: 0},
+    likes:     [{
+        user: { type: String, required: true},
+        default: []
+    }],
     comments: [{
         user: { type: String, required: true },
         text: { type: String, required: true },
