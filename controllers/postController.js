@@ -32,7 +32,7 @@ const addUserPost = async (req, res) => {
 }
 
 const deleteUserPost = async (req, res) => {
-    const {postID} = req.body
+    const {postID} = req.query
 
     try {
         const post = await Post.findById(postID)
@@ -41,7 +41,7 @@ const deleteUserPost = async (req, res) => {
 
         await deleteFileFromGoogleCS(imagePath[imagePath.length - 1], 'postPics')
 
-        post.deleteOne()
+        await post.deleteOne()
 
         res.status(200).json({
             message: 'Post deletion successful'

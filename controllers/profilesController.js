@@ -3,8 +3,6 @@ const Post = require('../models/Post')
 
 const getUserProfile = async (req, res) => {
     const {username} = req.query
-    console.log('hi')
-    console.log(username)
 
     try {
         const reqUser = await User.findOne({username})
