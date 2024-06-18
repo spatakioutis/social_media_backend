@@ -3,9 +3,6 @@ const Post = require('../models/Post')
 const addLikeToPost = async (req, res) => {
     const {username, postID} = req.body
 
-    console.log(postID)
-    console.log(username)
-
     try {
         const post = await Post.findById(postID)
 
@@ -23,8 +20,6 @@ const addLikeToPost = async (req, res) => {
         }
 
         post.likes.push(username)
-
-        console.log(post.likes)
         
         await post.save()
 
@@ -42,9 +37,6 @@ const addLikeToPost = async (req, res) => {
 const deleteLikeFromPost = async (req, res) => {
     const {username} = req.params
     const {postID} = req.query
-    
-    console.log(postID)
-    console.log(username)
 
     try {
         const post = await Post.findById(postID)
