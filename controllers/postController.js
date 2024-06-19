@@ -5,14 +5,17 @@ const User = require('../models/User')
 const addUserPost = async (req, res) => {
     const {text} = req.body
     const username = req.user.username
-    
-    const comment  = {
-        user: username,
-        text: text
+
+    const comments = []
+    if (text) {
+        comments.push( {
+            user: username,
+            text: text
+        })
     }
 
     try {
-        const newPost = new Post({user: username, image: '', comments: [comment]})
+        const newPost = new Post({user: username, image: '', comments})
 
         const image_url = await uploadFileToGoogleCS(newPost._id, req.file, 'postPics')
         
