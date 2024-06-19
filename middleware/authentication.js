@@ -18,6 +18,7 @@ const authenticateUserKey = (req, res, next) => {
     try {
         const user = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
         req.user = user
+        console.log(user)
         next()
     } catch (err) {
         res.status(401).send('Access denied. Invalid token.')

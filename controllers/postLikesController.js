@@ -42,10 +42,9 @@ const deleteLikeFromPost = async (req, res) => {
         const post = await Post.findById(postID)
 
         if (!post) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Post not found"
             })
-            return
         }
 
         if ( ! post.likes.some(like => like === username) ) {

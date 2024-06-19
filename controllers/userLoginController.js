@@ -12,9 +12,7 @@ const loginUser = async (req, res) => {
                 message: 'Username does not exist'
             })
         }
-        console.log(user.password)
-        const hashed = await bcrypt.hash(password, 10)
-        console.log(hashed)
+
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
             return res.status(401).json({ 

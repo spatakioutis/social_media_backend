@@ -84,6 +84,7 @@ const getPosts = async (req, res) => {
     }
     catch (error) {
         res.status(400).json({
+            who: 'i failed',
             error: error.message
         })
     }
