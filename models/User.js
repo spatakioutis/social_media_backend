@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const Post = require('./Post')
+const { deleteFileFromGoogleCS } = require('../utils/imageHandle')
 
 const userSchema = new mongoose.Schema({
     username: { 
@@ -45,11 +46,10 @@ userSchema.pre('save', async function (next) {
     }
 })
 
-userSchema.pre('deletOne', async function(next) {
+userSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     const userId = this._id
 
     try {
-        await Post.deleteMany({ user: userId })
 
         await Post.updateMany(
             { likes: userId },
@@ -60,6 +60,20 @@ userSchema.pre('deletOne', async function(next) {
             { 'comments.user': userId },
             { $pull: { comments: { user: userId } } }
         )
+
+        const posts = await Post.find({ user: userId })
+
+        const deleteImagePromises = posts.map(async (post) => {
+            if (post.image) {
+                const imagePath = post.image.split('/')
+                const filename = imagePath[imagePath.length - 1]
+                await deleteFileFromGoogleCS(filename, 'postPics')
+            }
+        })
+
+        await Promise.all(deleteImagePromises)
+
+        await Post.deleteMany({ user: userId })
 
         next()
     } catch (error) {

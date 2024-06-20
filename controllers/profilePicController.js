@@ -11,6 +11,7 @@ const addProfilePic = async (req, res) => {
 
         // delete previous profilePic if it was not the default
         if ( user.profilePic !== 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png') {
+            const filepath = user.profilePic.split('/')
             await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
         }
         
@@ -37,12 +38,12 @@ const deleteProfilePic = async (req, res) => {
     try {
         const user = await User.findOne({ username })
 
-        const filepath = user.profilePic.split('/')
-        if ( filepath[filepath.length - 1] !== 'default')
-
-        await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
-        
-        user.profilePic = 'default_pic.png'
+        if ( user.profilePic !== 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png') {
+            const filepath = user.profilePic.split('/')
+            await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
+            user.profilePic = 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png'
+        }
+    
         await user.save()
 
         res.status(200).json({

@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const Post = require('../models/Post')
-const bcrypt = require('bcryptjs');
-const { deleteFileFromGoogleCS } = require('../utils/imageHandle');
+const bcrypt = require('bcryptjs')
+const { deleteFileFromGoogleCS } = require('../utils/imageHandle')
 
 const registerUser = async (req, res) => {
     const {firstName, lastName, username, email, password} = req.body
@@ -45,6 +45,11 @@ const unregisterUser = async (req, res) => {
             return res.status(400).json({
                 message: 'Invalid password'
             })
+        }
+
+        if ( user.profilePic !== 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png') {
+            const filepath = user.profilePic.split('/')
+            await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
         }
 
         await user.deleteOne()
