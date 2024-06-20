@@ -3,13 +3,35 @@ const bcrypt = require('bcryptjs')
 const Post = require('./Post')
 
 const userSchema = new mongoose.Schema({
-    username:   { type: String, required: true, unique: true },
-    password:   { type: String, required: true },
-    firstName:  { type: String, required: true },
-    lastName:   { type: String, required: true },
-    email:      { type: String, required: true },
-    birthDate:  { type: Date  , required: true },
-    profilePic: { type: String, required: false}  
+    username: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+    password: {
+        type: String, 
+        required: true 
+    },
+    firstName: {
+        type: String,
+        required: true 
+    },
+    lastName: {
+        type: String,
+        required: true 
+    },
+    email: {
+        type: String,
+        required: true 
+    },
+    birthDate: {
+        type: Date  ,
+        required: true 
+    },
+    profilePic: {
+        type: String,
+        required: false
+    }  
 })
 
 userSchema.pre('save', async function (next) {
@@ -23,20 +45,25 @@ userSchema.pre('save', async function (next) {
     }
 })
 
-userSchema.pre('findOneAndUpdate', async function (next) {
-    this.oldDoc = await this.model.findOne(this.getFilter()).lean()
-    next()
-})
+userSchema.pre('deletOne', async function(next) {
+    const userId = this._id
 
-userSchema.post('findOneAndUpdate', async function(doc) {
-    const oldUsername = this.oldDoc.username
-    const newUsername = this.getUpdate().$set.username
+    try {
+        await Post.deleteMany({ user: userId })
 
-    if (newUsername && newUsername !== oldUsername) {
         await Post.updateMany(
-            { user: oldUsername },
-            { $set: { user: newUsername } }
+            { likes: userId },
+            { $pull: { likes: userId } }
         )
+
+        await Post.updateMany(
+            { 'comments.user': userId },
+            { $pull: { comments: { user: userId } } }
+        )
+
+        next()
+    } catch (error) {
+        next(error)
     }
 })
 

@@ -13,7 +13,7 @@ const getUserProfile = async (req, res) => {
             })
         }
 
-        const reqUserPosts = await Post.find({user: username})
+        const reqUserPosts = await Post.find({user: reqUser._id})
         
         const profile = {
             userInfo: {

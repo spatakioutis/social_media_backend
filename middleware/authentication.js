@@ -10,18 +10,21 @@ const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
 
 const authenticateUserKey = (req, res, next) => {
 
-    const token = req.header('Authorization')?.split(' ')[1] // Bearer <token>
+    const token = req.header('Authorization')?.split(' ')[1]
     if (!token) {
-        return res.status(401).send('Access denied. No token provided.')
+        return res.status(401).json({
+            message: 'Access denied. No token provided.'
+        })
     }
 
     try {
         const user = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
         req.user = user
-        console.log(user)
         next()
     } catch (err) {
-        res.status(401).send('Access denied. Invalid token.')
+        res.status(401).json({
+            message: 'Access denied. Invalid token.'
+        })
     }
 }
 

@@ -1,7 +1,9 @@
 const Post = require('../models/Post')
+const User = require('../models/User')
 
 const addLikeToPost = async (req, res) => {
-    const {username, postID} = req.body
+    const {postID} = req.body
+    const {username} = req.user
 
     try {
         const post = await Post.findById(postID)
@@ -13,13 +15,15 @@ const addLikeToPost = async (req, res) => {
             return
         }
 
-        if ( post.likes.some(like => like === username) ) {
+        const user = await User.findOne({username})
+
+        if ( post.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
                 message: "User has already liked this post"
             })
         }
 
-        post.likes.push(username)
+        post.likes.push(user._id)
         
         await post.save()
 
@@ -35,7 +39,7 @@ const addLikeToPost = async (req, res) => {
 }
 
 const deleteLikeFromPost = async (req, res) => {
-    const {username} = req.params
+    const {username} = req.user
     const {postID} = req.query
 
     try {
@@ -47,13 +51,15 @@ const deleteLikeFromPost = async (req, res) => {
             })
         }
 
-        if ( ! post.likes.some(like => like === username) ) {
+        const user = await User.findOne({username})
+
+        if ( ! post.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
                 message: "User has not liked this post"
             })
         }
 
-        post.likes = post.likes.filter(like => like !== username)
+        post.likes = post.likes.filter(like => !like.equals(user._id))
 
         await post.save()
 

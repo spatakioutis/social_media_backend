@@ -5,6 +5,7 @@ const updateUserInfo = async (req, res) => {
     const { username } = req.user
     const { updates } = req.body
 
+    //this controller is not allowed to alter the user password 
     if (updates.password) {
         delete updates.password
     }

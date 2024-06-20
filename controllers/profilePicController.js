@@ -3,7 +3,7 @@ const User = require('../models/User')
 
 const addProfilePic = async (req, res) => {
 
-    const username = req.user.username
+    const {username} = req.user
 
     try {
 
@@ -32,7 +32,7 @@ const addProfilePic = async (req, res) => {
 
 const deleteProfilePic = async (req, res) => {
 
-    const username = req.user.username
+    const {username} = req.user
 
     try {
         const user = await User.findOne({ username })

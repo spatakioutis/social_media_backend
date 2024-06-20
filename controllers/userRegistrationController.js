@@ -15,20 +15,27 @@ const registerUser = async (req, res) => {
 
         await newUser.save()
 
-        res.status(201).json({ message: 'Registration successful' })
+        res.status(201).json({
+            message: 'Registration successful' 
+        })
 
     } catch (error) {
         if (error.code == 11000) {
-            res.status(400).json({ error: 'Username already exists' })
+            res.status(400).json({
+                error: 'Username already exists'
+            })
         }
         else {
-            res.status(400).json({ error: error.message })
+            res.status(400).json({
+                error: error.message
+            })
         }
     }
 }
 
 const unregisterUser = async (req, res) => {
-    const {username, password} = req.body
+    const {password} = req.query
+    const {username} = req.user
 
     try {
         const user = await User.findOne({ username })
@@ -39,20 +46,6 @@ const unregisterUser = async (req, res) => {
                 message: 'Invalid password'
             })
         }
-
-        const userPosts = await Post.find({user: user.username})
-
-        await Promise.all(userPosts.map(async (post) => {
-            try {
-                const imagePath = post.image.split('/')
-                await deleteFileFromGoogleCS(imagePath[imagePath.length - 1], 'postPics')
-                await post.deleteOne()
-            } catch (error) {
-                res.status(400).json({
-                    error: error.message
-                })
-            }
-        }))
 
         await user.deleteOne()
 
@@ -65,10 +58,6 @@ const unregisterUser = async (req, res) => {
             error: error.message
         })
     }
-}
-
-const changePassword = async (req, res) => {
-    
 }
 
 module.exports = {

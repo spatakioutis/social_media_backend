@@ -4,18 +4,20 @@ const User = require('../models/User')
 
 const addUserPost = async (req, res) => {
     const {text} = req.body
-    const username = req.user.username
-
-    const comments = []
-    if (text) {
-        comments.push( {
-            user: username,
-            text: text
-        })
-    }
+    const {username} = req.user
 
     try {
-        const newPost = new Post({user: username, image: '', comments})
+        const user = await User.findOne({username})
+
+        const comments = []
+        if (text) {
+            comments.push({
+                user: user._id,
+                text: text
+            })
+        }
+
+        const newPost = new Post({user: user._id, image: '', comments})
 
         const image_url = await uploadFileToGoogleCS(newPost._id, req.file, 'postPics')
         
@@ -67,7 +69,7 @@ const getPosts = async (req, res) => {
             .limit(parseInt(limit))
         
         const postsWithUserInfo = await Promise.all(posts.map(async post => {
-            const user = await User.findOne({ username: post.user })
+            const user = await User.findById(post.user)
             return {
                 ...post.toObject(),
                 userInfo: {
