@@ -17,5 +17,4 @@ router.get('/', authentication.authenticateUserKey, postController.getPosts)
 router.post('/likes', authentication.authenticateUserKey, postLikesController.addLikeToPost)
 router.delete('/likes', authentication.authenticateUserKey, postLikesController.deleteLikeFromPost)
 
-
 module.exports = router
