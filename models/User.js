@@ -60,6 +60,11 @@ userSchema.pre('deleteOne', { document: true, query: false }, async function(nex
             { $pull: { comments: { user: userId } } }
         )
 
+        await Post.updateMany(
+            { 'comments.likes': userId },
+            { $pull: { 'comments.$[].likes': userId } }
+        );
+
         const posts = await Post.find({ user: userId })
 
         const deleteImagePromises = posts.map(async (post) => {
