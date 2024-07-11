@@ -50,7 +50,6 @@ userSchema.pre('deleteOne', { document: true, query: false }, async function(nex
     const userId = this._id
 
     try {
-
         await Post.updateMany(
             { likes: userId },
             { $pull: { likes: userId } }
