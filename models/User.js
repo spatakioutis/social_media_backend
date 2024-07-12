@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const Post = require('./Post')
+const Comment = require('./Comment')
 const { deleteFileFromGoogleCS } = require('../utils/imageHandle')
 
 const userSchema = new mongoose.Schema({
@@ -47,25 +48,35 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
-    const userId = this._id
+    const userID = this._id
 
     try {
+        // Remove user from likes in posts
         await Post.updateMany(
-            { likes: userId },
-            { $pull: { likes: userId } }
+            { likes: userID },
+            { $pull: { likes: userID } }
         )
 
-        await Post.updateMany(
-            { 'comments.user': userId },
-            { $pull: { comments: { user: userId } } }
+        // Remove user likes from comments
+        await Comment.updateMany(
+            { likes: userID },
+            { $pull: { likes: userID } }
         )
 
-        await Post.updateMany(
-            { 'comments.likes': userId },
-            { $pull: { 'comments.$[].likes': userId } }
-        );
+        // Delete comments by the user
+        const userComments = await Comment.find({ user: userID })
+        const userCommentIds = userComments.map(comment => comment._id)
 
-        const posts = await Post.find({ user: userId })
+        await Comment.deleteMany({ user: userID })
+
+        // Remove user's comments from posts
+        await Post.updateMany(
+            { comments: { $in: userCommentIds } },
+            { $pull: { comments: { $in: userCommentIds } } }
+        )
+
+        // Delete post images
+        const posts = await Post.find({ user: userID })
 
         const deleteImagePromises = posts.map(async (post) => {
             if (post.image) {
@@ -77,7 +88,7 @@ userSchema.pre('deleteOne', { document: true, query: false }, async function(nex
 
         await Promise.all(deleteImagePromises)
 
-        await Post.deleteMany({ user: userId })
+        await Post.deleteMany({ user: userID })
 
         next()
     } catch (error) {

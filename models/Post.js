@@ -1,42 +1,41 @@
 const mongoose = require('mongoose')
-const User = require('./User')
+const Comment = require('./Comment')
 
 const postSchema = new mongoose.Schema({
     user: { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'User', 
-            required: true
-        },
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true
+    },
     image: { 
-            type: String, 
-            required: true 
-        },
+        type: String, 
+        required: true 
+    },
+    caption: {
+         type: String
+    },
     likes: [{ 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'User' 
-        }],
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }],
     comments: [{
-        user: { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'User', 
-            required: true 
-        },
-        text: { 
-            type: String, 
-            required: true 
-        },
-        likes: [{ 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'User' 
-        }],
-        createdAt: { 
-            type: Date, 
-            default: Date.now 
-        }
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Comment'
     }],
     createdAt: { 
         type: Date, 
         default: Date.now 
+    }
+})
+
+postSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+    const postID = this._id
+
+    try {
+        await Comment.deleteMany({ postID: postID })
+        next()
+    } catch (error) {
+        next(error)
     }
 })
 

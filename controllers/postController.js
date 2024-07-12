@@ -9,15 +9,11 @@ const addUserPost = async (req, res) => {
     try {
         const user = await User.findOne({username})
 
-        const comments = []
-        if (text) {
-            comments.push({
-                user: user._id,
-                text: text
-            })
-        }
-
-        const newPost = new Post({user: user._id, image: '', comments})
+        const newPost = new Post({
+            user: user._id, 
+            image: '', 
+            caption: text
+        })
 
         const image_url = await uploadFileToGoogleCS(newPost._id, req.file, 'postPics')
         
