@@ -4,7 +4,7 @@ const Comment = require('../models/Comment')
 
 const addComment = async (req, res) => {
     const { postID, text } = req.body
-    const username = req.user
+    const {username} = req.user
 
     try {
         const post = await Post.findById(postID)
@@ -50,7 +50,7 @@ const addComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     const {postID} = req.query
-    const username = req.user
+    const {username} = req.user
 
     try { const post = await Post.findById(postID)
 
