@@ -89,16 +89,10 @@ const getAllCommentsFromPost = async (req, res) => {
     const {postID} = req.query
     
     try {
-        const post = Post.findById(postID)
+        let comments = await Comment.find({postID})
 
-        if ( !post ) {
-            return res.status(404).json({
-                message: 'Post not found'
-            })
-        }
-
-        const comments = post.comments.map(async (comment) => {
-            const user = User.findById(comment.user)
+        comments = await Promise.all(comments.map(async (comment) => {
+            const user = await User.findById(comment.user)
 
             return (
                 {
@@ -108,11 +102,11 @@ const getAllCommentsFromPost = async (req, res) => {
                     likes: comment.likes
                 }
             )
-        })
-
-        res.status(200).json([
+        }))
+        
+        res.status(200).json({
             comments
-        ])
+        })
     }
     catch (error) {
         res.status(400).json({
