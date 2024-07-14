@@ -49,29 +49,17 @@ const addComment = async (req, res) => {
 }
 
 const deleteComment = async (req, res) => {
-    const {postID} = req.query
-    const {username} = req.user
+    const {commentID} = req.query
 
-    try { const post = await Post.findById(postID)
+    try { 
+        const comment = await Comment.findById(commentID)
 
-        if ( !post ) {
+        if ( !comment ) {
             return res.status(404).json({
-                message: 'Post not found'
+                message: 'Comment not found'
             })
         }
-
-        const user = await User.findOne({username})
-
-        if ( !user ) {
-            return res.status(400).json({
-                message: "User not found"
-            })
-        }
-
-        await Comment.deleteMany({
-            postID: postID,
-            user: user._id
-        })
+        await comment.deleteOne()
 
         res.status(201).json({
             message: 'Comment deleted successfully'
@@ -96,14 +84,13 @@ const getAllCommentsFromPost = async (req, res) => {
 
             return (
                 {
+                    ...comment._doc,
                     username: user.username,
                     profilePic: user.profilePic,
-                    text: comment.text,
-                    likes: comment.likes
                 }
             )
         }))
-        
+
         res.status(200).json({
             comments
         })

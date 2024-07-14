@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const Post = require('./Post')
 
 const commentSchema = new mongoose.Schema({
     postID: {
@@ -26,13 +25,12 @@ const commentSchema = new mongoose.Schema({
     }
 })
 
-const Comment = mongoose.model('Comment', commentSchema, 'comments')
-
 commentSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     const commentID = this._id
 
     try {
-        await Post.updateOne(
+        const Post = require('./Post')
+        await Post.updateMany(
             { comments: commentID },
             { $pull: { comments: commentID } }
         )
@@ -41,5 +39,7 @@ commentSchema.pre('deleteOne', { document: true, query: false }, async function(
         next(error)
     }
 })
+
+const Comment = mongoose.model('Comment', commentSchema, 'comments')
 
 module.exports = Comment
