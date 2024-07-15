@@ -10,5 +10,6 @@ const profilesController = require('../controllers/profilesController.js')
 const router = express.Router()
 
 router.get('/', authentication.authenticateUserKey, profilesController.getUserProfile)
+router.get('/search', authentication.authenticateUserKey, profilesController.getUsersFromSearch)
 
 module.exports = router

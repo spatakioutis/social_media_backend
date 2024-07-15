@@ -39,6 +39,34 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+const getUsersFromSearch = async (req, res) => {
+    const {searchQuery} = req.query
+
+    try {
+        const results = await User.find({ 
+            username: { $regex: searchQuery, $options: 'i' } 
+        })
+
+        const users = results.map(user => {
+            return {
+                username: user.username,
+                profilePic: user.profilePic,
+                userID: user._id
+            }
+        })
+
+        // users = users.sort({username})
+
+        res.status(200).json({
+            users
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Internal server error' })
+    } 
+}
+
 module.exports = {
-    getUserProfile
+    getUserProfile,
+    getUsersFromSearch
 }
