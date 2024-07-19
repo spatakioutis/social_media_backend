@@ -11,7 +11,7 @@ const addComment = async (req, res) => {
 
         if ( !post ) {
             return res.status(404).json({
-                message: 'Post not found'
+                error: 'Post not found'
             })
         }
 
@@ -20,7 +20,7 @@ const addComment = async (req, res) => {
 
         if ( !user ) {
             return res.status(400).json({
-                message: "User not found"
+                error: "User not found"
             })
         }
 
@@ -42,8 +42,8 @@ const addComment = async (req, res) => {
         
     } 
     catch (error) {
-        res.status(400).json({
-            message: error.message
+        res.status(500).json({
+            error: error.message
         })
     }
 }
@@ -56,7 +56,7 @@ const deleteComment = async (req, res) => {
 
         if ( !comment ) {
             return res.status(404).json({
-                message: 'Comment not found'
+                error: 'Comment not found'
             })
         }
         await comment.deleteOne()
@@ -67,8 +67,8 @@ const deleteComment = async (req, res) => {
         
     } 
     catch (error) {
-        res.status(400).json({
-            message: error.message
+        res.status(500).json({
+            error: error.message
         })
     }
 }
@@ -96,8 +96,8 @@ const getAllCommentsFromPost = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
-            message: error.message
+        res.status(500).json({
+            error: error.message
         })
     }
 }

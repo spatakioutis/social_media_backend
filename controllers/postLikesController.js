@@ -9,17 +9,16 @@ const addLikeToPost = async (req, res) => {
         const post = await Post.findById(postID)
 
         if (!post) {
-            res.status(404).json({
-                message: "Post not found"
+            return res.status(404).json({
+                error: "Post not found"
             })
-            return
         }
 
         const user = await User.findOne({username})
 
         if ( post.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
-                message: "User has already liked this post"
+                error: "User has already liked this post"
             })
         }
 
@@ -32,7 +31,7 @@ const addLikeToPost = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }
@@ -47,7 +46,7 @@ const deleteLikeFromPost = async (req, res) => {
 
         if (!post) {
             return res.status(404).json({
-                message: "Post not found"
+                error: "Post not found"
             })
         }
 
@@ -55,7 +54,7 @@ const deleteLikeFromPost = async (req, res) => {
 
         if ( ! post.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
-                message: "User has not liked this post"
+                error: "User has not liked this post"
             })
         }
 
@@ -68,7 +67,7 @@ const deleteLikeFromPost = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }

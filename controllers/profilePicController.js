@@ -9,7 +9,6 @@ const addProfilePic = async (req, res) => {
 
         const user = await User.findOne({ username })
 
-        // delete previous profilePic if it was not the default
         if ( user.profilePic !== 'https://storage.googleapis.com/spatakioutis_app_img/profilePics/default_pic.png') {
             const filepath = user.profilePic.split('/')
             await deleteFileFromGoogleCS(filepath[filepath.length - 1], 'profPics')
@@ -25,7 +24,7 @@ const addProfilePic = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     } 
@@ -51,7 +50,7 @@ const deleteProfilePic = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message}
         )
     } 
@@ -69,7 +68,7 @@ const sendProfilePic = async (req, res) => {
 
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message}
         )
     }

@@ -11,7 +11,7 @@ const addLikeToComment = async (req, res) => {
 
         if (!comment) {
             return res.status(404).json({
-                message: "Comment not found"
+                error: "Comment not found"
             })
         }
 
@@ -19,7 +19,7 @@ const addLikeToComment = async (req, res) => {
 
         if ( comment.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
-                message: "User has already liked this comment"
+                error: "User has already liked this comment"
             })
         }
 
@@ -32,7 +32,7 @@ const addLikeToComment = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }
@@ -47,7 +47,7 @@ const deleteLikeFromComment = async (req, res) => {
 
         if (!comment) {
             return res.status(404).json({
-                message: "Comment not found"
+                error: "Comment not found"
             })
         }
 
@@ -55,7 +55,7 @@ const deleteLikeFromComment = async (req, res) => {
 
         if ( ! comment.likes.some(like => like.equals(user._id)) ) {
             return res.status(400).json({
-                message: "User has not liked this comment"
+                error: "User has not liked this comment"
             })
         }
 
@@ -68,7 +68,7 @@ const deleteLikeFromComment = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }

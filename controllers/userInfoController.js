@@ -15,7 +15,7 @@ const updateUserInfo = async (req, res) => {
             const existingUser = await User.findOne({ username: updates.username })
             if (existingUser) {
                 return res.status(400).json({ 
-                    message: 'Username is already taken' 
+                    error: 'Username is already taken' 
                 })
             }
         }
@@ -37,10 +37,8 @@ const updateUserInfo = async (req, res) => {
             }
         })
     } catch (error) {
-        console.log(error)
         res.status(500).json({ 
-            message: 'Error updating user information',
-            error 
+            error: error.message
         })
     }
 }
@@ -55,7 +53,7 @@ const updatePassword = async (req, res) => {
         const passwordMatch = await bcrypt.compare(oldPassword, user.password)
         if (!passwordMatch) {
             return res.status(401).json({ 
-                message: 'Invalid password'
+                error: 'Invalid password'
             })
         }
 
@@ -68,7 +66,7 @@ const updatePassword = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }

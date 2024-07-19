@@ -26,7 +26,7 @@ const registerUser = async (req, res) => {
             })
         }
         else {
-            res.status(400).json({
+            res.status(500).json({
                 error: error.message
             })
         }
@@ -43,7 +43,7 @@ const unregisterUser = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
             return res.status(400).json({
-                message: 'Invalid password'
+                error: 'Invalid password'
             })
         }
 

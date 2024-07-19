@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Comment = require('./Comment')
+const Hashtag = require('./Hashtag')
 
 const postSchema = new mongoose.Schema({
     user: { 
@@ -12,7 +13,7 @@ const postSchema = new mongoose.Schema({
         required: true 
     },
     caption: {
-         type: String
+        type: String
     },
     likes: [{ 
         type: mongoose.Schema.Types.ObjectId, 
@@ -21,6 +22,10 @@ const postSchema = new mongoose.Schema({
     comments: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Comment'
+    }],
+    hashtags: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Hashtag'
     }],
     createdAt: { 
         type: Date, 
@@ -33,6 +38,11 @@ postSchema.pre('deleteOne', { document: true, query: false }, async function(nex
 
     try {
         await Comment.deleteMany({ postID: postID })
+
+        await Hashtag.updateMany(
+            { posts: postID },
+            { $pull: { posts:postID } }
+        )
         next()
     } catch (error) {
         next(error)

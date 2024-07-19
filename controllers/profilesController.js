@@ -33,7 +33,7 @@ const getUserProfile = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }
@@ -55,14 +55,13 @@ const getUsersFromSearch = async (req, res) => {
             }
         })
 
-        // users = users.sort({username})
-
         res.status(200).json({
             users
         })
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ error: 'Internal server error' })
+        res.status(500).json({ 
+            error: error.message
+        })
     } 
 }
 

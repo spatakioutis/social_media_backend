@@ -26,7 +26,7 @@ const addUserPost = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }
@@ -49,7 +49,7 @@ const deleteUserPost = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             error: error.message
         })
     }
@@ -81,8 +81,7 @@ const getPosts = async (req, res) => {
         })
     }
     catch (error) {
-        res.status(400).json({
-            who: 'i failed',
+        res.status(500).json({
             error: error.message
         })
     }
