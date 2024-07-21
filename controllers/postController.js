@@ -1,6 +1,7 @@
 const {uploadFileToGoogleCS, deleteFileFromGoogleCS } = require('../utils/imageHandle')
 const Post = require('../models/Post')
 const User = require('../models/User')
+const { addPostToHashtag } = require('./hashtagsController')
 
 const extractHashtags = (text) => {
     const regex = /#(\w+)/g
@@ -35,6 +36,10 @@ const addUserPost = async (req, res) => {
         newPost.image = image_url
 
         await newPost.save()
+
+        await Promise.all(hashtags.map(async (hashtag) => {
+            await addPostToHashtag(hashtag, newPost._id)
+        }))
 
         res.status(201).json({
             message: 'Post upload successful'

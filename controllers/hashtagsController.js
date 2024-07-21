@@ -1,12 +1,30 @@
 const Post = require('../models/Post')
 const User = require('../models/User')
-const Hashtag = require('./Hashtag')
+const Hashtag = require('../models/Hashtag')
+
+const addPostToHashtag = async (tag, postID) =>  {
+    
+    try {
+        let hashtag = await Hashtag.findOne({tag})
+
+        if ( !hashtag ) {
+            hashtag = new Hashtag({tag})
+        }
+
+        hashtag.posts.push(postID)
+
+        await hashtag.save() 
+    }
+    catch (error) {
+        throw new Error(error)
+    }
+}
 
 const getHashtagPosts = async (req, res) => {
     const {tag} = req.query
 
     try {
-        const hashtag = await Hashtag.findOne(tag)
+        const hashtag = await Hashtag.findOne({tag})
         
         if ( !hashtag ) {
             return res.status(404).json({
@@ -73,6 +91,7 @@ const getHashtagsFromSearch = async (req,res) => {
 }
 
 module.exports = {
+    addPostToHashtag,
     getHashtagPosts,
     getHashtagsFromSearch
 }
