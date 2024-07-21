@@ -2,9 +2,23 @@ const {uploadFileToGoogleCS, deleteFileFromGoogleCS } = require('../utils/imageH
 const Post = require('../models/Post')
 const User = require('../models/User')
 
+const extractHashtags = (text) => {
+    const regex = /#(\w+)/g
+    let matches
+    const hashtags = []
+
+    while ((matches = regex.exec(text)) !== null) {
+        hashtags.push(matches[1].toLowerCase())
+    }
+
+    return hashtags
+}
+
 const addUserPost = async (req, res) => {
     const {text} = req.body
     const {username} = req.user
+
+    const hashtags = extractHashtags(text)
 
     try {
         const user = await User.findOne({username})
@@ -12,7 +26,8 @@ const addUserPost = async (req, res) => {
         const newPost = new Post({
             user: user._id, 
             image: '', 
-            caption: text
+            caption: text,
+            hashtags: hashtags
         })
 
         const image_url = await uploadFileToGoogleCS(newPost._id, req.file, 'postPics')

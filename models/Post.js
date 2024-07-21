@@ -24,8 +24,7 @@ const postSchema = new mongoose.Schema({
         ref: 'Comment'
     }],
     hashtags: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Hashtag'
+        type: String
     }],
     createdAt: { 
         type: Date, 

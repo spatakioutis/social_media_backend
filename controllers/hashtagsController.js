@@ -35,6 +35,7 @@ const getHashtagPosts = async (req, res) => {
         posts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         
         res.status(200).json({
+            message: 'Post fetching successful',
             posts
         })
 
@@ -46,6 +47,32 @@ const getHashtagPosts = async (req, res) => {
     } 
 }
 
+const getHashtagsFromSearch = async (req,res) => {
+    const {searchQuery} = req.query
+
+    try {
+        const results = await Hashtag.find({ 
+            tag: { $regex: searchQuery, $options: 'i' } 
+        })
+
+        const hashtags = results.map(hashtag => {
+            return {
+                hashtagID: hashtag._id,
+                tag: hashtag.tag
+            }
+        })
+
+        res.status(200).json({
+            hashtags
+        })
+    } catch (error) {
+        res.status(500).json({ 
+            error: error.message
+        })
+    } 
+}
+
 module.exports = {
-    getHashtagPosts
+    getHashtagPosts,
+    getHashtagsFromSearch
 }
